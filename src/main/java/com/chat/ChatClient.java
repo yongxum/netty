@@ -1,10 +1,7 @@
 package com.chat;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -26,6 +23,8 @@ public class ChatClient {
             bootstrap.group(group)
                     .channel(NioSocketChannel.class)
 //                    .localAddress(53690) // 指定客户端端口号
+                    .option(ChannelOption.TCP_NODELAY, true) // 如果要求高实时性，有数据发送时就马上发送，就将该选项设置为true关闭Nagle算法
+                    .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(10*1024)) //这行配置比较重要, 关系到读取到字符串的大小
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline().addLast(new StringDecoder()) //加入解码器
