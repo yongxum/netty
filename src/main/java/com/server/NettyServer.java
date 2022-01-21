@@ -21,7 +21,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class NettyServer {
 
-    public void bind(int port) throws Exception {
+    public void bind(String host, int port) throws Exception {
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(); //bossGroup就是parentGroup，是负责处理TCP/IP连接的
         EventLoopGroup workerGroup = new NioEventLoopGroup(); //workerGroup就是childGroup,是负责处理Channel(通道)的I/O事件
@@ -41,7 +41,7 @@ public class NettyServer {
                 }
             });
         //绑定监听端口，调用sync同步阻塞方法等待绑定操作完成，完成后返回ChannelFuture类似于JDK中Future
-        ChannelFuture future = sb.bind(port).sync();
+        ChannelFuture future = sb.bind(host, port).sync();
 
         if (future.isSuccess()) {
             System.out.println("服务端启动成功");
